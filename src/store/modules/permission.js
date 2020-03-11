@@ -10,7 +10,7 @@ export const filterAsyncRouter = (routers) => { // 遍历后台传来的路由�
         router.component = Layout
       } else {
         const component = router.component
-        router.component = loadView(component)
+        router.component = (resolve) => require(['@/views/' + component], resolve)
       }
     }
     if (router.children && router.children.length) {
@@ -19,10 +19,6 @@ export const filterAsyncRouter = (routers) => { // 遍历后台传来的路由�
     return true
   })
   return accessedRouters
-}
-
-const loadView = (view) => { // 路由懒加载
-  return () => import('@/views/' + view)
 }
 
 const state = {

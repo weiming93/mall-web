@@ -68,7 +68,14 @@ service.interceptors.response.use(
   },
   error => {
     if (error.response) {
-      const errorMessage = error.response.data === null ? '系统内部异常，请联系网站管理员' : error.response.data
+      let errorMessage
+      if(error.response.data === null){
+        errorMessage = '系统内部异常，请联系网站管理员'
+      }else if(error.response.data.message){
+        errorMessage = error.response.data.message
+      }else{
+        errorMessage = error.response.data
+      }
       switch (error.response.status) {
         case 404:
           Message({
@@ -200,18 +207,11 @@ async function queryRefreshToken(config, refreshToken) {
     refresh_token: refreshToken
   })
   if (result.status === success) {
-    saveData(result.data)
+    await store.dispatch('user/saveLoginData')
     config.headers['Authorization'] = 'bearer ' + getToken()
   }
   return config
 }
 
-function saveData(data) {
-  store.commit('user/setAccessToken', data.access_token)
-  store.commit('user/setRefreshToken', data.refresh_token)
-  const current = new Date()
-  const expireTime = current.setTime(current.getTime() + 1000 * data.expires_in)
-  store.commit('user/setExpireTime', expireTime)
-}
 
 export default request

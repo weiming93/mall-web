@@ -19,19 +19,8 @@ import './utils/error-log' // error log
 import request from '@/utils/request'
 import * as filters from './filters' // global filters
 import i18n from './lang' // internationalization
-import permission from './components/Permission'
-/**
- * If you don't want to use mock-server
- * you want to use MockJs for mock api
- * you can execute: mockXHR()
- *
- * Currently MockJs will be used in the production environment,
- * please remove it before going online ! ! !
- */
-if (process.env.NODE_ENV === 'production') {
-  const { mockXHR } = require('../mock')
-  mockXHR()
-}
+import permission from '@/directive/permission'
+
 Vue.use(permission)
 Vue.use(Element, {
   i18n: (key, value) => i18n.t(key, value),

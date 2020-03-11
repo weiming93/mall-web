@@ -5,30 +5,28 @@ const state = {
   accessToken: storage.get('ACCESS_TOKEN'),
   refreshToken: storage.get('REFRESH_TOKEN'),
   expireTime: storage.get('EXPIRE_TIME', 0),
-  user: storage.get('USER'),
+  user: {},
   roles: [],
-  permissions: storage.get('PERMISSIONS'),
+  permissions: [],
   avatar:''
 }
 const mutations = {
-  setAccessToken(state, val) {
+  SET_ACCESS_TOKEN(state, val) {
     storage.save('ACCESS_TOKEN', val)
     state.accessToken = val
   },
-  setRefreshToken(state, val) {
+  SET_REFRESH_TOKEN(state, val) {
     storage.save('REFRESH_TOKEN', val)
     state.refreshToken = val
   },
-  setExpireTime(state, val) {
+  SET_EXPIRE_TIME(state, val) {
     storage.save('EXPIRE_TIME', val)
     state.expireTime = val
   },
-  setUser(state, val) {
-    storage.save('USER', val)
+  SET_USER(state, val) {
     state.user = val
   },
-  setPermissions(state, val) {
-    storage.save('PERMISSIONS', val)
+  SET_PERMISSIONS(state, val) {
     state.permissions = val
   },
   SET_ROLES: (state, roles) => {
@@ -44,11 +42,10 @@ const actions = {
     return new Promise((resolve, reject) => {
       request.get("auth/user")
         .then(res => {
-          debugger
-          commit('setUser', res.data.principal)
+          commit('SET_USER', res.data.principal)
           commit('SET_ROLES',res.data.principal.roles)
           commit('SET_AVATAR',res.data.principal.avatar)
-          commit('setPermissions', res.data.authorities)
+          commit('SET_PERMISSIONS', res.data.authorities)
           resolve(res)
         }).catch(error => {
         reject(error)
@@ -57,17 +54,17 @@ const actions = {
   },
   // 报错token信息
   saveLoginData({commit}, data) {
-    commit('setAccessToken', data.access_token)
-    commit('setRefreshToken', data.refresh_token)
+    commit('SET_ACCESS_TOKEN', data.access_token)
+    commit('SET_REFRESH_TOKEN', data.refresh_token)
     const current = new Date()
     const expireTime = current.setTime(current.getTime() + 1000 * data.expires_in)
-    commit('setExpireTime', expireTime)
+    commit('SET_EXPIRE_TIME', expireTime)
   },
 
 // 登出
   logOut({commit}) {
     return new Promise((resolve, reject) => {
-      request.get("auth/signout").then(res => {
+      request.delete("auth/signout").then(res => {
         removeLoginInfo(commit)
         resolve(res)
       }).catch(error => {
@@ -83,10 +80,10 @@ const actions = {
 //移除登录信息
 const removeLoginInfo = (commit) => {
   storage.clear()
-  commit('setAccessToken', '')
-  commit('setRefreshToken', '')
-  commit('setUser', {})
-  commit('setPermissions', [])
+  commit('SET_ACCESS_TOKEN', '')
+  commit('SET_REFRESH_TOKEN', '')
+  commit('SET_USER', {})
+  commit('SET_PERMISSIONS', [])
 }
 
 export default {

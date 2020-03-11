@@ -164,7 +164,7 @@
                     if (valid) {
                         this.loading = true
                         const that = this
-                        this.$login('auth/oauth/token', {
+                        this.$login('/auth/oauth/token', {
                             ...that.loginForm,
                             key: this.randomId
                         }).then((r) => {
