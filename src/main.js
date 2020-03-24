@@ -16,26 +16,18 @@ import router from './router'
 import './icons' // icon
 import './permission' // permission control
 import './utils/error-log' // error log
-import request from '@/utils/request'
 import * as filters from './filters' // global filters
 import i18n from './lang' // internationalization
 import permission from '@/directive/permission'
+// 数据字典
+import dict from '@/mixin/dict'
 
+Vue.use(dict)
 Vue.use(permission)
 Vue.use(Element, {
   i18n: (key, value) => i18n.t(key, value),
-  size: Cookies.get('size') || 'medium' // set element-ui default size
+  size: Cookies.get('size') || 'small' // set element-ui default size
 })
-
-Vue.prototype.$post = request.post
-Vue.prototype.$put = request.put
-Vue.prototype.$patch = request.patch
-Vue.prototype.$get = request.get
-Vue.prototype.$delete = request.delete
-Vue.prototype.$download = request.download
-Vue.prototype.$upload = request.upload
-Vue.prototype.$login = request.login
-
 
 // register global utility filters
 Object.keys(filters).forEach(key => {

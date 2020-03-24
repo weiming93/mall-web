@@ -1,7 +1,6 @@
 import { constantRoutes } from '@/router'
-import request from "@/utils/request";
 import Layout from '@/layout'
-
+import { getRoutes } from '@/api/system/menu'
 
 export const filterAsyncRouter = (routers) => { // 遍历后台传来的路由字符串，转换为组件对象
   const accessedRouters = routers.filter(router => {
@@ -32,10 +31,10 @@ const mutations = {
   }
 }
 const actions = {
-  generateRoutes({commit}) {
+  generateRoutes({ commit }) {
     return new Promise((resolve, reject) => {
-      request.get("user/menu/trees").then(res => {
-        const asyncRouter = filterAsyncRouter(res.data)
+      getRoutes().then(res => {
+        const asyncRouter = filterAsyncRouter(res)
         commit('SET_ROUTERS', asyncRouter)
         resolve(asyncRouter)
       }).catch(error => {

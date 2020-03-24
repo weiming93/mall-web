@@ -12,8 +12,14 @@
       <div class="desc">7. {{ $t('common.desc.g') }}</div>
       <div class="desc">8. {{ $t('common.desc.h') }}</div>
     </div>
-    <el-form ref="loginForm" :model="loginForm" :rules="rules" class="login-form" autocomplete="off"
-             label-position="left">
+    <el-form
+      ref="loginForm"
+      :model="loginForm"
+      :rules="rules"
+      class="login-form"
+      autocomplete="off"
+      label-position="left"
+    >
       <div class="title-container">
         <h3 class="title">
           {{ $t('login.title') }}
@@ -59,139 +65,138 @@
           />
         </el-form-item>
         <img :src="imageCode" alt="codeImage" class="code-image" @click="getCodeImage">
-        <el-button :loading="loading" type="primary" style="width:100%;margin-bottom:14px;"
-                   @click.native.prevent="handleLogin">
+        <el-button
+          :loading="loading"
+          type="primary"
+          style="width:100%;margin-bottom:14px;"
+          @click.native.prevent="handleLogin"
+        >
           {{ $t('login.logIn') }}
         </el-button>
       </span>
     </el-form>
-    <span class="login-footer">
-
-    </span>
+    <span class="login-footer" />
   </div>
 </template>
 
-
 <script>
-    import {randomNum} from '@/utils'
-    import axios from 'axios'
-
-    export default {
-        name: 'Login',
-        data() {
-            const validatePassword = (rule, value, callback) => {
-                if (value.length < 6) {
-                    callback(new Error(this.$t('rules.noLessThan6')))
-                } else {
-                    callback()
-                }
-            }
-            return {
-                tabActiveName: 'bindLogin',
-                codeUrl: `/auth/captcha`,
-                login: {
-                    type: 'up'
-                },
-                loginForm: {
-                    username: '',
-                    password: '',
-                },
-                rules: {
-                    username: {required: true, message: this.$t('rules.require'), trigger: 'blur'},
-                    password: {required: true, message: this.$t('rules.require'), trigger: 'blur', validator: validatePassword},
-                    code: {required: true, message: this.$t('rules.require'), trigger: 'blur'},
-                },
-                authUser: null,
-                loading: false,
-                showDialog: false,
-                redirect: undefined,
-                otherQuery: {},
-                randomId: randomNum(24, 16),
-                imageCode: '',
-                page: {
-                    width: window.screen.width * 0.5,
-                    height: window.screen.height * 0.5
-                }
-            }
-        },
-        mounted() {
-            this.$store.dispatch('user/clean')
-            this.getCodeImage()
-        },
-        watch: {
-            $route: {
-                handler: function(route) {
-                    const query = route.query
-                    if (query) {
-                        this.redirect = query.redirect
-                        this.otherQuery = this.getOtherQuery(query)
-                    }
-                },
-                immediate: true
-            }
-        },
-        methods: {
-            getCodeImage() {
-                axios({
-                    method: 'GET',
-                    url: `${this.codeUrl}?key=${this.randomId}`,
-                    responseType: 'arraybuffer'
-                }).then(res => {
-                    return 'data:image/png;base64,' + btoa(
-                        new Uint8Array(res.data)
-                            .reduce((data, byte) => data + String.fromCharCode(byte), '')
-                    )
-                }).then((res) => {
-                    this.imageCode = res
-                }).catch((e) => {
-                    if (e.toString().indexOf('429') !== -1) {
-                        this.$message({
-                            message: this.$t('tips.tooManyRequest'),
-                            type: 'error'
-                        })
-                    } else {
-                        this.$message({
-                            message: this.$t('tips.getCodeImageFailed'),
-                            type: 'error'
-                        })
-                    }
-                })
-            },
-
-            handleLogin() {
-
-                this.$refs.loginForm.validate(valid => {
-                    if (valid) {
-                        this.loading = true
-                        const that = this
-                        this.$login('/auth/oauth/token', {
-                            ...that.loginForm,
-                            key: this.randomId
-                        }).then((r) => {
-                            const data = r.data
-                            this.$store.dispatch('user/saveLoginData', data)
-                            this.$router.push({ path: this.redirect || '/', query: this.otherQuery })
-                            this.loading = false
-                        }).catch((error) => {
-                            that.loading = false
-                            that.getCodeImage()
-                        })
-                    }else{
-                        console.log('error submit!!')
-                        return false
-                    }
-                })
-            },
-            getOtherQuery(query) {
-                return Object.keys(query).reduce((acc, cur) => {
-                    if (cur !== 'redirect') {
-                        acc[cur] = query[cur]
-                    }
-                    return acc
-                }, {})
-            }
-        }
+import { randomNum } from '@/utils'
+import axios from 'axios'
+import request from '@/utils/request'
+export default {
+  name: 'Login',
+  data() {
+    const validatePassword = (rule, value, callback) => {
+      if (value.length < 6) {
+        callback(new Error(this.$t('rules.noLessThan6')))
+      } else {
+        callback()
+      }
     }
+    return {
+      tabActiveName: 'bindLogin',
+      codeUrl: `/auth/captcha`,
+      login: {
+        type: 'up'
+      },
+      loginForm: {
+        username: '',
+        password: ''
+      },
+      rules: {
+        username: { required: true, message: this.$t('rules.require'), trigger: 'blur' },
+        password: { required: true, message: this.$t('rules.require'), trigger: 'blur', validator: validatePassword },
+        code: { required: true, message: this.$t('rules.require'), trigger: 'blur' }
+      },
+      authUser: null,
+      loading: false,
+      showDialog: false,
+      redirect: undefined,
+      otherQuery: {},
+      randomId: randomNum(24, 16),
+      imageCode: '',
+      page: {
+        width: window.screen.width * 0.5,
+        height: window.screen.height * 0.5
+      }
+    }
+  },
+  watch: {
+    $route: {
+      handler: function(route) {
+        const query = route.query
+        if (query) {
+          this.redirect = query.redirect
+          this.otherQuery = this.getOtherQuery(query)
+        }
+      },
+      immediate: true
+    }
+  },
+  mounted() {
+    this.$store.dispatch('user/clean')
+    this.getCodeImage()
+  },
+  methods: {
+    getCodeImage() {
+      axios({
+        method: 'GET',
+        url: `${this.codeUrl}?key=${this.randomId}`,
+        responseType: 'arraybuffer'
+      }).then(res => {
+        return 'data:image/png;base64,' + btoa(
+          new Uint8Array(res.data)
+            .reduce((data, byte) => data + String.fromCharCode(byte), '')
+        )
+      }).then((res) => {
+        this.imageCode = res
+      }).catch((e) => {
+        if (e.toString().indexOf('429') !== -1) {
+          this.$message({
+            message: this.$t('tips.tooManyRequest'),
+            type: 'error'
+          })
+        } else {
+          this.$message({
+            message: this.$t('tips.getCodeImageFailed'),
+            type: 'error'
+          })
+        }
+      })
+    },
+
+    handleLogin() {
+      this.$refs.loginForm.validate(valid => {
+        if (valid) {
+          this.loading = true
+          const that = this
+          request.login('/auth/oauth/token', {
+            ...that.loginForm,
+            key: this.randomId
+          }).then((data) => {
+            this.$store.dispatch('user/saveLoginData', data)
+            this.$router.push({ path: this.redirect || '/', query: this.otherQuery })
+            this.loading = false
+          }).catch((error) => {
+            that.loading = false
+            that.getCodeImage()
+          })
+        } else {
+          console.log('error submit!!')
+          return false
+        }
+      })
+    },
+    getOtherQuery(query) {
+      return Object.keys(query).reduce((acc, cur) => {
+        if (cur !== 'redirect') {
+          acc[cur] = query[cur]
+        }
+        return acc
+      }, {})
+    }
+  }
+}
 </script>
 
 <style lang="scss">

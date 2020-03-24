@@ -40,7 +40,7 @@ module.exports = {
       // change xxx-api/login => mock/login
       // detail: https://cli.vuejs.org/config/#devserver-proxy
       [process.env.VUE_APP_BASE_API]: {
-        target: 'http://localhost:9000',
+        target: 'http://localhost:9500',
         changeOrigin: true,
         pathRewrite: {
           ['^' + process.env.VUE_APP_BASE_API]: ''
@@ -50,11 +50,12 @@ module.exports = {
   },
   configureWebpack: {
     // provide the app's title in webpack's name field, so that
-    // it can be accessed in index.html to inject the correct title.
+    // it can be accessed in index.vue to inject the correct title.
     name: name,
     resolve: {
       alias: {
-        '@': resolve('src')
+        '@': resolve('src'),
+        '@crud': resolve('src/components/Crud')
       }
     }
   },

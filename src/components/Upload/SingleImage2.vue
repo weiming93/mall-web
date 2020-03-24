@@ -7,6 +7,7 @@
       :on-success="handleImageSuccess"
       class="image-uploader"
       drag
+      :http-request="httpRequest"
       action="https://httpbin.org/post"
     >
       <i class="el-icon-upload" />
@@ -71,6 +72,9 @@ export default {
           reject(false)
         })
       })
+    },
+    httpRequest() {
+
     }
   }
 }

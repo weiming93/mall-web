@@ -1,8 +1,8 @@
 import axios from 'axios'
-import {MessageBox, Message} from 'element-ui'
-import {authorizationValue} from '@/settings'
+import { MessageBox, Message } from 'element-ui'
+import { authorizationValue } from '@/settings'
 import store from '@/store'
-import {getToken, getRefreshToken, getExpireTime} from '@/utils/auth'
+import { getToken, getRefreshToken, getExpireTime } from '@/utils/auth'
 import router from '@/router'
 import NProgress from 'nprogress'
 import 'nprogress/nprogress.css'
@@ -64,16 +64,16 @@ service.interceptors.response.use(
    * You can also judge the status by HTTP Status Code
    */
   response => {
-    return response
+    return response.data
   },
   error => {
     if (error.response) {
       let errorMessage
-      if(error.response.data === null){
+      if (error.response.data === null) {
         errorMessage = '系统内部异常，请联系网站管理员'
-      }else if(error.response.data.message){
+      } else if (error.response.data.message) {
         errorMessage = error.response.data.message
-      }else{
+      } else {
         errorMessage = error.response.data
       }
       switch (error.response.status) {
@@ -151,16 +151,14 @@ const request = {
   get(url, params) {
     const _params = Object.is(params, undefined) ? '' : params
     return service.get(url, {
-      params: _params,
-      headers: {
-        'Authorization': store.getters.accessToken
-      }
+      params: _params
     })
   },
   delete(url, params) {
-    const _params = Object.is(params, undefined) ? '' : params
-    return service.delete(url, {
-      params: _params
+    return service({
+      url: url,
+      method: 'delete',
+      data: params
     })
   },
   download(url, params, filename) {
@@ -212,6 +210,5 @@ async function queryRefreshToken(config, refreshToken) {
   }
   return config
 }
-
 
 export default request

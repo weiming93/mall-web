@@ -8,7 +8,7 @@ const state = {
   user: {},
   roles: [],
   permissions: [],
-  avatar:''
+  avatar: ''
 }
 const mutations = {
   SET_ACCESS_TOKEN(state, val) {
@@ -34,26 +34,26 @@ const mutations = {
   },
   SET_AVATAR: (state, avatar) => {
     state.avatar = avatar
-  },
+  }
 }
 const actions = {
   // 获取用户信息
-  getInfo({commit}) {
+  getInfo({ commit }) {
     return new Promise((resolve, reject) => {
-      request.get("auth/user")
+      request.get('/auth/user')
         .then(res => {
-          commit('SET_USER', res.data.principal)
-          commit('SET_ROLES',res.data.principal.roles)
-          commit('SET_AVATAR',res.data.principal.avatar)
-          commit('SET_PERMISSIONS', res.data.authorities)
+          commit('SET_USER', res.principal)
+          commit('SET_ROLES', res.principal.roles)
+          commit('SET_AVATAR', res.principal.avatar)
+          commit('SET_PERMISSIONS', res.authorities.map(res => res.authority))
           resolve(res)
         }).catch(error => {
-        reject(error)
-      })
+          reject(error)
+        })
     })
   },
   // 报错token信息
-  saveLoginData({commit}, data) {
+  saveLoginData({ commit }, data) {
     commit('SET_ACCESS_TOKEN', data.access_token)
     commit('SET_REFRESH_TOKEN', data.refresh_token)
     const current = new Date()
@@ -61,10 +61,10 @@ const actions = {
     commit('SET_EXPIRE_TIME', expireTime)
   },
 
-// 登出
-  logOut({commit}) {
+  // 登出
+  logOut({ commit }) {
     return new Promise((resolve, reject) => {
-      request.delete("auth/signout").then(res => {
+      request.delete('/auth/signout').then(res => {
         removeLoginInfo(commit)
         resolve(res)
       }).catch(error => {
@@ -73,11 +73,11 @@ const actions = {
       })
     })
   },
-  clean({commit}){
+  clean({ commit }) {
     removeLoginInfo(commit)
   }
 }
-//移除登录信息
+// 移除登录信息
 const removeLoginInfo = (commit) => {
   storage.clear()
   commit('SET_ACCESS_TOKEN', '')
