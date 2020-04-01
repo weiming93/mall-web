@@ -125,7 +125,7 @@ export default {
       },
       rules: {
         name: [
-          { required: true, message: '请输入名称', trigger: 'blur' }
+          { required: true, message: this.$t('rules.require'), trigger: 'blur' }
         ]
       }
     }
@@ -136,13 +136,14 @@ export default {
       if (this.$refs.dictDetail) {
         this.$refs.dictDetail.data = []
         this.$refs.dictDetail.dictName = ''
+        this.$refs.dictDetail.dictId = ''
       }
     },
     // 选中字典后，设置字典详情数据
     handleCurrentChange(val) {
       if (val) {
         this.$refs.dictDetail.dictName = val.name
-        this.$refs.dictDetail.form.dict.id = val.id
+        this.$refs.dictDetail.dictId = val.id
         this.$refs.dictDetail.crud.toQuery()
       }
     }

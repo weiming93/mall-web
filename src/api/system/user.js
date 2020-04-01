@@ -12,5 +12,16 @@ export function edit(data) {
   return request.put('/system/user', data)
 }
 
-export default { add, edit, del }
+export function updatePass(data) {
+  return request.patch('/system/user/pass', data)
+}
+
+export function updateProfile(data) {
+  return request.patch('/system/user/profile', data)
+}
+
+export function getById(data) {
+  return request.get('/system/user/' + data)
+}
+export default { add, edit, del, updatePass, updateProfile, getById }
 

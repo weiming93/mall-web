@@ -52,6 +52,14 @@ const actions = {
         })
     })
   },
+  /**
+   * 更新头像
+   * @param commit
+   * @param data
+   */
+  updateAvatar({commit}, data){
+    commit('SET_AVATAR', data)
+  },
   // 报错token信息
   saveLoginData({ commit }, data) {
     commit('SET_ACCESS_TOKEN', data.access_token)

@@ -141,10 +141,10 @@ export default {
       },
       rules: {
         name: [
-          { required: true, message: '请输入名称', trigger: 'blur' }
+          { required: true, message: this.$t('rules.require'), trigger: 'blur' }
         ],
-        permission: [
-          { required: true, message: '请输入权限', trigger: 'blur' }
+        level: [
+          {required: true, message: this.$t('rules.require'), trigger: 'blur', type: 'number'}
         ]
       }
     }

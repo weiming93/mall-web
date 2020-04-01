@@ -54,14 +54,23 @@
           <el-form-item label="电话" prop="phone">
             <el-input v-model.number="form.phone" />
           </el-form-item>
+
+          <el-form-item label="昵称" prop="nickName">
+            <el-input v-model="form.nickName" />
+          </el-form-item>
           <el-form-item label="邮箱" prop="email">
             <el-input v-model="form.email" />
           </el-form-item>
-
+          <el-form-item label="性别">
+            <el-radio-group v-model="form.sex" style="width: 178px">
+              <el-radio label="男">男</el-radio>
+              <el-radio label="女">女</el-radio>
+            </el-radio-group>
+          </el-form-item>
           <el-form-item label="状态">
             <el-radio-group v-model="form.enabled" :disabled="form.id === user.id">
               <el-radio
-                v-for="item in dict.user_status"
+                v-for="item in dict.enabled_status"
                 :key="item.id"
                 :label="item.value"
               >{{ item.label }}</el-radio>
@@ -96,6 +105,7 @@
         <el-table-column :selectable="checkboxT" type="selection" width="55" />
         <el-table-column v-if="columns.visible('username')" :show-overflow-tooltip="true" prop="username" label="用户名" />
         <el-table-column v-if="columns.visible('nickName')" :show-overflow-tooltip="true" prop="nickName" label="昵称" />
+        <el-table-column v-if="columns.visible('sex')" prop="sex" label="性别" />
         <el-table-column v-if="columns.visible('phone')" :show-overflow-tooltip="true" prop="phone" width="100" label="电话" />
         <el-table-column v-if="columns.visible('email')" :show-overflow-tooltip="true" width="125" prop="email" label="邮箱" />
         <el-table-column v-if="columns.visible('enabled')" label="状态" align="center" prop="enabled">
@@ -153,20 +163,20 @@ import '@riophae/vue-treeselect/dist/vue-treeselect.css'
 let userRoles = []
 // crud交由presenter持有
 const defaultCrud = CRUD({ title: '用户', url: '/system/user', crudMethod: { ...crudUser }})
-const defaultForm = { id: null, username: null, email: null, enabled: 'false', roles: [], phone: null }
+const defaultForm = { id: null, username: null,nickName: null, sex: '男', email: null, enabled: 'false', roles: [], phone: null }
 export default {
   name: 'User',
   components: { Treeselect, crudOperation, rrOperation, udOperation, pagination },
   mixins: [presenter(defaultCrud), header(), form(defaultForm), crud()],
   // 数据字典
-  dicts: ['user_status'],
+  dicts: ['enabled_status'],
   data() {
     // 自定义验证
     const validPhone = (rule, value, callback) => {
       if (!value) {
-        callback(new Error('请输入电话号码'))
+        callback(new Error(this.$t('rules.require')))
       } else if (!isvalidPhone(value)) {
-        callback(new Error('请输入正确的11位手机号码'))
+        callback(new Error(this.$t('rules.mobile')))
       } else {
         callback()
       }
@@ -186,20 +196,23 @@ export default {
       ],
       rules: {
         username: [
-          { required: true, message: '请输入用户名', trigger: 'blur' },
-          { min: 2, max: 20, message: '长度在 2 到 20 个字符', trigger: 'blur' }
+          { required: true, message: this.$t('rules.require'), trigger: 'blur' },
+          { min: 2, max: 20, message: this.$t('rules.range2to20'), trigger: 'blur' }
         ],
         nickName: [
-          { required: true, message: '请输入用户昵称', trigger: 'blur' },
-          { min: 2, max: 20, message: '长度在 2 到 20 个字符', trigger: 'blur' }
+          { required: true, message: this.$t('rules.require'), trigger: 'blur' },
+          { min: 2, max: 20, message: this.$t('rules.range2to20'), trigger: 'blur' }
         ],
         email: [
-          { required: true, message: '请输入邮箱地址', trigger: 'blur' },
-          { type: 'email', message: '请输入正确的邮箱地址', trigger: 'blur' }
+          { required: true, message: this.$t('rules.require'), trigger: 'blur' },
+          { type: 'email', message: this.$t('rules.email'), trigger: 'blur' }
         ],
         phone: [
           { required: true, trigger: 'blur', validator: validPhone }
-        ]
+        ],
+        roles: [
+          { required: true, message: this.$t('rules.require'), trigger: 'change' },
+        ],
       }
     }
   },
@@ -281,13 +294,13 @@ export default {
 
     // 改变状态
     changeEnabled(data, val) {
-      this.$confirm('此操作将 "' + this.dict.label.user_status[val] + '" ' + data.username + ', 是否继续？', '提示', {
+      this.$confirm('此操作将 "' + this.dict.label.enabled_status[val] + '" ' + data.username + ', 是否继续？', '提示', {
         confirmButtonText: '确定',
         cancelButtonText: '取消',
         type: 'warning'
       }).then(() => {
         crudUser.edit(data).then(res => {
-          this.crud.notify(this.dict.label.user_status[val] + '成功', CRUD.NOTIFICATION_TYPE.SUCCESS)
+          this.crud.notify(this.dict.label.enabled_status[val] + '成功', CRUD.NOTIFICATION_TYPE.SUCCESS)
         }).catch(() => {
           data.enabled = !data.enabled
         })

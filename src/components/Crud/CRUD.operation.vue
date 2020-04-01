@@ -40,16 +40,16 @@
       >
         删除
       </el-button>
-      <el-button
-        v-if="crud.optShow.download"
-        :loading="crud.downloadLoading"
-        :disabled="!crud.data.length"
-        class="filter-item"
-        size="mini"
-        type="warning"
-        icon="el-icon-download"
-        @click="crud.doExport"
-      >导出</el-button>
+<!--      <el-button-->
+<!--        v-if="crud.optShow.download"-->
+<!--        :loading="crud.downloadLoading"-->
+<!--        :disabled="!crud.data.length"-->
+<!--        class="filter-item"-->
+<!--        size="mini"-->
+<!--        type="warning"-->
+<!--        icon="el-icon-download"-->
+<!--        @click="crud.doExport"-->
+<!--      >导出</el-button>-->
       <!--右侧-->
       <slot name="right" />
     </span>

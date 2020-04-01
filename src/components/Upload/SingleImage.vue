@@ -6,12 +6,11 @@
     :on-remove="handleImageRemove"
     action="/system/resources"
     :headers="headers"
-    :limit="1"
-    :on-exceed="handleExceed"
-    list-type="picture"
-    :file-list="fileList"
+    :show-file-list="false"
+    class="avatar-uploader"
   >
-    <el-button size="small" type="primary">点击上传</el-button>
+    <img v-if="imageUrl" :src="imageUrl" class="avatar">
+    <i v-else class="el-icon-plus avatar-uploader-icon"></i>
     <div slot="tip" class="el-upload__tip">只能上传jpg/png文件，且不超过1M</div>
   </el-upload>
 </template>
@@ -34,8 +33,8 @@ export default {
     }
   },
   computed: {
-    fileList() {
-      return [{ name: '', url: this.value }]
+    imageUrl() {
+      return this.value
     }
   },
   methods: {
@@ -70,10 +69,28 @@ export default {
 }
 </script>
 
-<style lang="scss" scoped>
-  .image-preview {
-    width: 100%;
-    height: 100%;
+<style>
+  .avatar-uploader .el-upload {
+    border: 1px dashed #d9d9d9;
+    border-radius: 6px;
+    cursor: pointer;
+    position: relative;
+    overflow: hidden;
+  }
+  .avatar-uploader .el-upload:hover {
+    border-color: #409EFF;
+  }
+  .avatar-uploader-icon {
+    font-size: 28px;
+    color: #8c939d;
+    width: 128px;
+    height: 128px;
+    line-height: 128px;
+    text-align: center;
+  }
+  .avatar {
+    width: 128px;
+    height: 128px;
     display: block;
   }
 

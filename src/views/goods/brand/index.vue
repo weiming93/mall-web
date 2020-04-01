@@ -171,7 +171,7 @@ export default {
   components: { crudOperation, rrOperation, udOperation, pagination, Upload },
   mixins: [presenter(defaultCrud), header(), form(defaultForm), crud()],
   // 数据字典
-  dicts: ['visibled_status', 'brand_factory_status'],
+  dicts: ['enabled_status'],
   data() {
     return {
       permission: {
@@ -182,15 +182,18 @@ export default {
 
       rules: {
         name: [
-          { required: true, message: '请输入品牌名', trigger: 'blur' },
-          { min: 2, max: 20, message: '长度在 2 到 20 个字符', trigger: 'blur' }
+          { required: true, message: this.$t('rules.require'), trigger: 'blur' },
+          { min: 2, max: 20, message: this.$t('rules.range2to20'), trigger: 'blur' }
         ],
         letter: [
-          { required: true, message: '请输入品牌首字母', trigger: 'blur' },
+          { required: true, message: this.$t('rules.require'), trigger: 'blur' },
           { min: 1, max: 1, message: '长度在 1 个字符', trigger: 'blur' }
         ],
         logo: [
-          { required: true, message: '请上传LOGO图片', trigger: 'blur' }
+          { required: true, message: this.$t('rules.require'), trigger: 'blur' }
+        ],
+        sort: [
+          {required: true, message: this.$t('rules.require'), trigger: 'blur', type: 'number'}
         ]
 
       }
@@ -207,13 +210,13 @@ export default {
   methods: {
     // 改变展示状态
     changeVisibled(data, val) {
-      this.$confirm('此操作将 "' + this.dict.label.visibled_status[val] + '" ' + data.name + ', 是否继续？', '提示', {
+      this.$confirm('此操作将 "' + this.dict.label.enabled_status[val] + '" ' + data.name + ', 是否继续？', '提示', {
         confirmButtonText: '确定',
         cancelButtonText: '取消',
         type: 'warning'
       }).then(() => {
         crudApi.edit(data).then(res => {
-          this.crud.notify(this.dict.label.visibled_status[val] + '成功', CRUD.NOTIFICATION_TYPE.SUCCESS)
+          this.crud.notify(this.dict.label.enabled_status[val] + '成功', CRUD.NOTIFICATION_TYPE.SUCCESS)
         }).catch(() => {
           data.visibled = !data.visibled
         })
@@ -223,13 +226,13 @@ export default {
     },
     // 改变品牌制造商状态
     changeBrandFactory(data, val) {
-      this.$confirm('此操作将 "' + this.dict.label.brand_factory_status[val] + '" 品牌制造商标记, 是否继续？', '提示', {
+      this.$confirm('此操作将 "' + this.dict.label.enabled_status[val] + '" 品牌制造商标记, 是否继续？', '提示', {
         confirmButtonText: '确定',
         cancelButtonText: '取消',
         type: 'warning'
       }).then(() => {
         crudApi.edit(data).then(res => {
-          this.crud.notify(this.dict.label.brand_factory_status[val] + '成功', CRUD.NOTIFICATION_TYPE.SUCCESS)
+          this.crud.notify(this.dict.label.enabled_status[val] + '成功', CRUD.NOTIFICATION_TYPE.SUCCESS)
         }).catch(() => {
           data.brandFactory = !data.brandFactory
         })

@@ -2,15 +2,15 @@
   <div class="login-container">
     <div class="login-info">
       <div class="title">Mall Cloud</div>
-      <div class="sub-title">{{ $t('common.system') }}</div>
-      <div class="desc">1. {{ $t('common.desc.a') }}</div>
-      <div class="desc">2. {{ $t('common.desc.b') }}</div>
-      <div class="desc">3. {{ $t('common.desc.c') }}</div>
-      <div class="desc">4. {{ $t('common.desc.d') }}</div>
-      <div class="desc">5. {{ $t('common.desc.e') }}</div>
-      <div class="desc">6. {{ $t('common.desc.f') }}</div>
-      <div class="desc">7. {{ $t('common.desc.g') }}</div>
-      <div class="desc">8. {{ $t('common.desc.h') }}</div>
+<!--      <div class="sub-title">{{ $t('common.system') }}</div>-->
+<!--      <div class="desc">1. {{ $t('common.desc.a') }}</div>-->
+<!--      <div class="desc">2. {{ $t('common.desc.b') }}</div>-->
+<!--      <div class="desc">3. {{ $t('common.desc.c') }}</div>-->
+<!--      <div class="desc">4. {{ $t('common.desc.d') }}</div>-->
+<!--      <div class="desc">5. {{ $t('common.desc.e') }}</div>-->
+<!--      <div class="desc">6. {{ $t('common.desc.f') }}</div>-->
+<!--      <div class="desc">7. {{ $t('common.desc.g') }}</div>-->
+<!--      <div class="desc">8. {{ $t('common.desc.h') }}</div>-->
     </div>
     <el-form
       ref="loginForm"
@@ -22,7 +22,7 @@
     >
       <div class="title-container">
         <h3 class="title">
-          {{ $t('login.title') }}
+          Mall Cloud 系统登录
         </h3>
       </div>
       <span v-if="login.type === 'up'">
@@ -30,7 +30,7 @@
           <el-input
             ref="username"
             v-model="loginForm.username"
-            :placeholder="$t('login.username')"
+            placeholder="账号"
             prefix-icon="el-icon-user"
             name="username"
             type="text"
@@ -44,7 +44,7 @@
             v-model="loginForm.password"
             prefix-icon="el-icon-key"
             type="password"
-            :placeholder="$t('login.password')"
+            placeholder="密码"
             name="password"
             autocomplete="off"
             :show-password="true"
@@ -56,7 +56,7 @@
             ref="code"
             v-model="loginForm.code"
             prefix-icon="el-icon-lock"
-            :placeholder="$t('login.code')"
+            placeholder="验证码"
             name="code"
             type="text"
             autocomplete="off"
@@ -71,7 +71,7 @@
           style="width:100%;margin-bottom:14px;"
           @click.native.prevent="handleLogin"
         >
-          {{ $t('login.logIn') }}
+          立即登录
         </el-button>
       </span>
     </el-form>
@@ -153,12 +153,12 @@ export default {
       }).catch((e) => {
         if (e.toString().indexOf('429') !== -1) {
           this.$message({
-            message: this.$t('tips.tooManyRequest'),
+            message: '获取验证码过于频繁，请稍后再试',
             type: 'error'
           })
         } else {
           this.$message({
-            message: this.$t('tips.getCodeImageFailed'),
+            message: '获取图形验证码失败',
             type: 'error'
           })
         }

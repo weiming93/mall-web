@@ -9,8 +9,8 @@ export function add(data) {
   return request.post('/system/role', data)
 }
 
-export function get(id) {
-  return request.get('/system/role/' + id)
+export function get(ids) {
+  return request.get('/system/role/' + ids)
 }
 
 export function getLevel() {

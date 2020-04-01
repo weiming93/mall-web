@@ -67,20 +67,20 @@
         </el-form-item>
         <el-form-item v-show="form.type!== 'BUTTON'" label="外链菜单" prop="iframe">
           <el-radio-group v-model="form.iframe" size="mini">
-            <el-radio-button label="true">是</el-radio-button>
-            <el-radio-button label="false">否</el-radio-button>
+            <el-radio-button :label="true">是</el-radio-button>
+            <el-radio-button :label="false">否</el-radio-button>
           </el-radio-group>
         </el-form-item>
         <el-form-item v-show="form.type=== 'MENU'" label="菜单缓存" prop="cache">
           <el-radio-group v-model="form.cache" size="mini">
-            <el-radio-button label="true">是</el-radio-button>
-            <el-radio-button label="false">否</el-radio-button>
+            <el-radio-button :label="true">是</el-radio-button>
+            <el-radio-button :label="false">否</el-radio-button>
           </el-radio-group>
         </el-form-item>
         <el-form-item v-show="form.type!== 'BUTTON'" label="菜单可见" prop="hidden">
           <el-radio-group v-model="form.hidden" size="mini">
-            <el-radio-button label="false">是</el-radio-button>
-            <el-radio-button label="true">否</el-radio-button>
+            <el-radio-button :label="false">是</el-radio-button>
+            <el-radio-button :label="true">否</el-radio-button>
           </el-radio-group>
         </el-form-item>
         <el-form-item v-show="form.type !== 'BUTTON'" label="菜单标题" prop="name">
@@ -234,12 +234,16 @@ export default {
       },
       rules: {
         name: [
-          { required: true, message: '请输入名称', trigger: 'blur' }
+          { required: true, message: this.$t('rules.require'), trigger: 'blur' }
         ],
         path: [
-          { required: true, message: '请输入地址', trigger: 'blur' }
+          { required: true, message: this.$t('rules.require'), trigger: 'blur' }
+        ],
+        sort: [
+          {required: true, message: this.$t('rules.require'), trigger: 'blur', type: 'number'}
         ]
-      }
+      },
+
     }
   },
   methods: {

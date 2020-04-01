@@ -5,7 +5,7 @@
     </div>
     <div v-else>
       <!--工具栏-->
-      <div class="head-container" />
+      <div class="head-container"/>
 
       <!--表单组件-->
       <el-dialog
@@ -18,10 +18,10 @@
       >
         <el-form ref="form" :inline="true" :model="form" :rules="rules" size="small" label-width="80px">
           <el-form-item label="字典标签" prop="label">
-            <el-input v-model="form.label" style="width: 370px;" />
+            <el-input v-model="form.label" style="width: 370px;"/>
           </el-form-item>
           <el-form-item label="字典值" prop="value">
-            <el-input v-model="form.value" style="width: 370px;" />
+            <el-input v-model="form.value" style="width: 370px;"/>
           </el-form-item>
           <el-form-item label="排序" prop="sort">
             <el-input-number
@@ -44,9 +44,9 @@
         <el-table-column label="所属字典">
           {{ dictName }}
         </el-table-column>
-        <el-table-column v-if="columns.visible('label')" prop="label" label="字典标签" />
-        <el-table-column v-if="columns.visible('value')" prop="value" label="字典值" />
-        <el-table-column v-if="columns.visible('sort')" prop="sort" label="排序" />
+        <el-table-column v-if="columns.visible('label')" prop="label" label="字典标签"/>
+        <el-table-column v-if="columns.visible('value')" prop="value" label="字典值"/>
+        <el-table-column v-if="columns.visible('sort')" prop="sort" label="排序"/>
         <el-table-column
           v-permission="['admin','dictDetail:edit','dictDetail:del']"
           label="操作"
@@ -63,61 +63,67 @@
         </el-table-column>
       </el-table>
       <!--分页组件-->
-      <pagination />
+      <pagination/>
     </div>
   </div>
 </template>
 
 <script>
-import CRUD, { presenter, header, form, crud } from '@crud/crud'
-import rrOperation from '@crud/RR.operation'
-import crudOperation from '@crud/CRUD.operation'
-import udOperation from '@crud/UD.operation'
-import crudDictDetail from '@/api/system/dictDetail'
-import pagination from '@crud/Pagination'
+  import CRUD, {presenter, header, form, crud} from '@crud/crud'
+  import rrOperation from '@crud/RR.operation'
+  import crudOperation from '@crud/CRUD.operation'
+  import udOperation from '@crud/UD.operation'
+  import crudDictDetail from '@/api/system/dictDetail'
+  import pagination from '@crud/Pagination'
 
-// crud交由presenter持有
-const defaultCrud = CRUD({
-  title: '字典详情',
-  url: '/system/dictDetail',
-  crudMethod: { ...crudDictDetail },
-  queryOnPresenterCreated: false
-})
-const defaultForm = { id: null, label: null, value: null, dict: { id: null }, sort: 999 }
+  // crud交由presenter持有
+  const defaultCrud = CRUD({
+    title: '字典详情',
+    url: '/system/dictDetail',
+    crudMethod: {...crudDictDetail},
+    queryOnPresenterCreated: false
+  })
+  const defaultForm = {id: null, label: null, value: null, dict: {id: null}, sort: 999}
 
-export default {
-  mixins: [presenter(defaultCrud), header(), form(defaultForm), crud()],
-  components: { crudOperation, rrOperation, udOperation, pagination },
-  data() {
-    return {
-      permission: {
-        add: ['admin', 'dictDetail:add'],
-        edit: ['admin', 'dictDetail:edit'],
-        del: ['admin', 'dictDetail:del']
-      },
-      dictName: '',
-      rules: {
-        label: [
-          { required: true, message: '请输入字典标签', trigger: 'blur' }
-        ],
-        value: [
-          { required: true, message: '请输入字典值', trigger: 'blur' }
-        ],
-        sort: [
-          { required: true, message: '请输入序号', trigger: 'blur', type: 'number' }
-        ]
+  export default {
+    mixins: [presenter(defaultCrud), header(), form(defaultForm), crud()],
+    components: {crudOperation, rrOperation, udOperation, pagination},
+    data() {
+      return {
+        permission: {
+          add: ['admin', 'dictDetail:add'],
+          edit: ['admin', 'dictDetail:edit'],
+          del: ['admin', 'dictDetail:del']
+        },
+        dictName: '',
+        dictId: '',
+        rules: {
+          label: [
+            {required: true, message: this.$t('rules.require'), trigger: 'blur'}
+          ],
+          value: [
+            {required: true, message: this.$t('rules.require'), trigger: 'blur'}
+          ],
+          sort: [
+            {required: true, message: this.$t('rules.require'), trigger: 'blur', type: 'number'}
+          ]
+        }
       }
-    }
-  },
+    },
 
-  methods: {
-    [CRUD.HOOK.beforeRefresh](crud) {
-      if (this.dictName) {
-        this.query['dictName'] = this.dictName
+    methods: {
+      [CRUD.HOOK.beforeRefresh](crud) {
+        if (this.dictName) {
+          this.query['dictName'] = this.dictName
+        }
+      },
+      [CRUD.HOOK.beforeToAdd](crud) {
+        if (this.dictId) {
+          this.form.dict.id = this.dictId
+        }
       }
     }
   }
-}
 </script>
 
 <style rel="stylesheet/scss" lang="scss" scoped>
