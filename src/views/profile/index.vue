@@ -129,7 +129,7 @@
   import updatePass from './center/updatePass'
   import store from '@/store'
   import {isvalidPhone} from '@/utils/validate'
-  import {updateProfile, getById} from '@/api/system/user'
+  import {updateProfile, getById, updateAvatar} from '@/api/system/user'
   import Avatar from '@/assets/avatar.jpg'
 
   export default {
@@ -189,7 +189,7 @@
       },
       handleSuccess(response, file, fileList) {
 
-        updateProfile({id: this.user.id, avatar: response})
+        updateAvatar({id: this.user.id, avatar: response})
           .then(() => {
             this.$notify({
               title: '头像修改成功',

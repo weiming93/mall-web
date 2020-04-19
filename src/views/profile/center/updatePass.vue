@@ -69,7 +69,7 @@ export default {
             })
             setTimeout(() => {
               store.dispatch('user/logOut').then(() => {
-                location.reload() // 为了重新实例化vue-router对象 避免bug
+                this.$router.push(`/login?redirect=${this.$route.fullPath}`)
               })
             }, 1500)
           }).catch(err => {

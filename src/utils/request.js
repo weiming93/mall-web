@@ -104,7 +104,10 @@ service.interceptors.response.use(
               confirmButtonText: '确定',
               showClose: false,
               callback: action => {
-                router.push('/login')
+                store.dispatch('user/logOut')
+                  .then(res => {
+                    router.push(`/login?redirect=${router.fullPath}`)
+                  })
               }
             })
           } else {

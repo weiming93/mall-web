@@ -85,7 +85,12 @@ export const constantRoutes = [
         meta: { title: '个人中心' }
       }
     ]
-  }
+  },
+  {
+    path: '*',
+    component: () => import('@/views/error-page/404'),
+    hidden: true
+  },
 ]
 
 const createRouter = () => new Router({

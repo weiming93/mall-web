@@ -2,15 +2,7 @@
   <div class="login-container">
     <div class="login-info">
       <div class="title">Mall Cloud</div>
-<!--      <div class="sub-title">{{ $t('common.system') }}</div>-->
-<!--      <div class="desc">1. {{ $t('common.desc.a') }}</div>-->
-<!--      <div class="desc">2. {{ $t('common.desc.b') }}</div>-->
-<!--      <div class="desc">3. {{ $t('common.desc.c') }}</div>-->
-<!--      <div class="desc">4. {{ $t('common.desc.d') }}</div>-->
-<!--      <div class="desc">5. {{ $t('common.desc.e') }}</div>-->
-<!--      <div class="desc">6. {{ $t('common.desc.f') }}</div>-->
-<!--      <div class="desc">7. {{ $t('common.desc.g') }}</div>-->
-<!--      <div class="desc">8. {{ $t('common.desc.h') }}</div>-->
+      <div class="sub-title">正在努力完善中...</div>
     </div>
     <el-form
       ref="loginForm"
@@ -95,7 +87,7 @@ export default {
     }
     return {
       tabActiveName: 'bindLogin',
-      codeUrl: `/auth/captcha`,
+      codeUrl: `${process.env.VUE_APP_BASE_API}/auth/captcha`,
       login: {
         type: 'up'
       },

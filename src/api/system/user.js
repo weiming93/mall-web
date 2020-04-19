@@ -19,6 +19,9 @@ export function updatePass(data) {
 export function updateProfile(data) {
   return request.patch('/system/user/profile', data)
 }
+export function updateAvatar(data) {
+  return request.patch('/system/user/avatar', data)
+}
 
 export function getById(data) {
   return request.get('/system/user/' + data)
